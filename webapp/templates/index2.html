@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Flask App</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #1a1a1a !important; /* Dark background color */
+            color: #ffffff !important; /* Text color */
+        }
+
+        h1, h2 {
+            color: #3498db; /* Blue heading color */
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .map-container {
+            height: 500px;
+            margin-bottom: 20px;
+            border: 2px solid #3498db; /* Blue border */
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .chart-container {
+            margin-top: 20px;
+        }
+
+        .chart-container img {
+            border: 2px solid #e67e22; /* Orange border for charts */
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #95a5a6; /* Gray text color */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">Your Flask App</h1>
+
+        <!-- Map Container -->
+        <div class="map-container">
+            {{ map_html|safe }} <!-- Folium map HTML goes here -->
+        </div>
+
+        <!-- Construction Data Analysis -->
+        <div class="chart-container">
+            <h2>Construction Data Analysis</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="data:image/png;base64,{{ proj_per_boro }}" class="img-fluid" alt="Projects per Borough">
+                    <p>Number of Projects per Borough</p>
+                </div>
+                <div class="col-md-4">
+                    <img src="data:image/png;base64,{{ proj_dist }}" class="img-fluid" alt="Project Distribution">
+                    <p>Distribution of Project Types</p>
+                </div>
+                <div class="col-md-4">
+                    <img src="data:image/png;base64,{{ award_boro }}" class="img-fluid" alt="Average Award Amount">
+                    <p>Normalized Average Award Amount by Borough</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collision Data Analysis -->
+        <div class="chart-container">
+            <h2>Collision Data Analysis</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="data:image/png;base64,{{ collision_boro }}" class="img-fluid" alt="Collisions per Borough">
+                    <p>Number of Collisions per Borough</p>
+                </div>
+                <div class="col-md-6">
+                    <img src="data:image/png;base64,{{ pie_chart }}" class="img-fluid" alt="Distribution of Casualties">
+                    <p>Distribution of Casualties by Borough</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Traffic Data Analysis -->
+        <div class="chart-container">
+            <h2>Traffic Data Analysis</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="data:image/png;base64,{{ heatmap }}" class="img-fluid" alt="Traffic Heatmap">
+                    <p>Heatmap of Average Traffic Volume by Day and Hour</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+</body>
+
+</html>
