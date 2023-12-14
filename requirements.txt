@@ -1,0 +1,12 @@
+base64
+pandas
+matplotlib
+flask
+wordcloud
+folium
+geopy
+seaborn
+geopandas
+osmnx
+networkx
+scikit-learn
