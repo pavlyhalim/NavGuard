@@ -1,4 +1,4 @@
-# Import necessary libraries
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from io import BytesIO
@@ -10,7 +10,7 @@ import seaborn as sns
 import geopandas as gpd
 
 
-# Function to read data from CSV files
+
 def read_data():
     collision_data = pd.read_csv("collisions.csv")
     construction_data = pd.read_csv("constructions.csv")
@@ -18,21 +18,18 @@ def read_data():
     return collision_data, construction_data, traffic_data
 
 
-# Function to filter traffic data for a specific year
 def filter_traffic_data(traffic_data, year):
     traffic_data["Date"] = pd.to_datetime(traffic_data["Date"])
     filtered_data = traffic_data[traffic_data["Date"].dt.year == year]
     return filtered_data
 
 
-# Function to filter crash data for a specific year
 def filter_crash_data(collision_data, year):
     collision_data["crash_date"] = pd.to_datetime(collision_data["crash_date"])
     filtered_crash_data = collision_data[collision_data["crash_date"].dt.year == year]
     return filtered_crash_data
 
 
-# Function to aggregate crash data by location
 def aggregate_crash_data(filtered_crash_data):
     time_columns = filtered_crash_data.columns[7:31]
     filtered_crash_data["Average_volume"] = (
@@ -65,7 +62,6 @@ def aggregate_crash_data(filtered_crash_data):
     return aggregated_df[["borough", "latitude", "longitude", "total_casualties"]]
 
 
-# Function to create GeoDataFrames for traffic, construction, and collision data
 def create_geo_dataframes(df1, df2, df3):
     traffic_gdf = gpd.GeoDataFrame(
         df1, geometry=gpd.points_from_xy(df1["longitude"], df1["latitude"])
@@ -79,7 +75,6 @@ def create_geo_dataframes(df1, df2, df3):
     return traffic_gdf, construction_gdf, collision_gdf
 
 
-# Function to visualize data on a map using Folium
 def plot_on_map(data1, data2, data3, sample_size=None):
     data1 = data1.dropna(subset=["longitude", "latitude"])
     data2 = data2.dropna(subset=["longitude", "latitude"])
@@ -120,7 +115,6 @@ def plot_on_map(data1, data2, data3, sample_size=None):
     return m
 
 
-# Function to check if a street is in the crash data
 def is_street_in_crash_data(street_name, collision_data):
     on_street_mask = collision_data["on_street_name"].str.contains(
         street_name, case=False, na=False
@@ -131,7 +125,6 @@ def is_street_in_crash_data(street_name, collision_data):
     return any(on_street_mask | off_street_mask)
 
 
-# Function to get coordinates from an address using Geopy
 def get_coordinates(address):
     geolocator = Nominatim(user_agent="YourAppName")
     location = geolocator.geocode(address)
@@ -142,8 +135,6 @@ def get_coordinates(address):
         return None, None
 
 
-# Function to visualize data on a map using Folium with feature groups
-# Function to visualize data on a map using Folium with feature groups
 def plot_on_map_feature_groups(data1, data2, data3):
     data1 = data1.dropna(subset=["longitude", "latitude"])
     data2 = data2.dropna(subset=["longitude", "latitude"])
@@ -193,9 +184,7 @@ def plot_on_map_feature_groups(data1, data2, data3):
     return m
 
 
-# Function to analyze construction data and generate visualizations
 def analyze_construction_data(construction_data):
-    # Plot a bar chart of the number of projects per borough
     borough_counts = construction_data["boro"].value_counts()
     fig, ax = plt.subplots()
     borough_counts.plot(kind="bar", rot=45, color="skyblue", ax=ax)
@@ -207,7 +196,6 @@ def analyze_construction_data(construction_data):
     fig.savefig(buf, format="png")
     proj_per_boro = base64.b64encode(buf.getbuffer()).decode("ascii")
 
-    # Distribution of project types
     project_type_counts = construction_data["consttype"].value_counts()
     fig1, ax1 = plt.subplots()
     ax1.pie(
@@ -216,14 +204,13 @@ def analyze_construction_data(construction_data):
         autopct="%1.1f%%",
         startangle=90,
     )
-    ax1.axis("equal")  # Equal aspect ratio ensures that pie is drawn as a circle.
+    ax1.axis("equal") 
     plt.title("Distribution of Project Types")
 
     buf = BytesIO()
     fig.savefig(buf, format="png")
     proj_dist = base64.b64encode(buf.getbuffer()).decode("ascii")
 
-    # Average award amount by borough
     avg_award_by_borough = construction_data.groupby("boro")["award"].mean()
     normalized_avg_award = avg_award_by_borough / avg_award_by_borough.sum()
     fig2, ax2 = plt.subplots()
@@ -239,13 +226,10 @@ def analyze_construction_data(construction_data):
     return proj_per_boro, proj_dist, award_boro
 
 
-# Function to analyze collision data and generate visualizations
-# Function to analyze collision data and generate visualizations
 def analyze_collision_data(collision_data):
     collision_data["borough"].fillna("Unknown", inplace=True)
     borough_collisions = collision_data["borough"].value_counts()
 
-    # Calculate total casualties by summing injury and death columns
     collision_data["total_casualties"] = (
         collision_data["number_of_persons_injured"]
         + collision_data["number_of_persons_killed"]
@@ -257,7 +241,6 @@ def analyze_collision_data(collision_data):
         + collision_data["number_of_motorist_killed"]
     )
 
-    # Plot bar chart for the number of collisions per borough
     fig, ax = plt.subplots()
     plt.bar(borough_collisions.index, borough_collisions.values, color="blue")
     plt.title("Number of Collisions per Borough in New York")
@@ -268,7 +251,6 @@ def analyze_collision_data(collision_data):
     fig.savefig(buf, format="png")
     collision_boro = base64.b64encode(buf.getbuffer()).decode("ascii")
 
-    # Plot pie chart for the distribution of casualties by borough
     borough_casualties = (
         collision_data.groupby("borough")["total_casualties"].sum().reset_index()
     )
@@ -289,7 +271,6 @@ def analyze_collision_data(collision_data):
     return collision_boro, pie_chart
 
 
-# Function to analyze traffic data and generate visualizations
 def analyze_traffic_data(traffic_data):
     time_columns = traffic_data.columns[7:31]
     traffic_data["Average_volume"] = traffic_data[time_columns].sum(axis=1) / 24
@@ -303,19 +284,19 @@ def analyze_traffic_data(traffic_data):
     traffic_data["hh"] = traffic_data["Date"].dt.hour
     traffic_data["mm"] = traffic_data["Date"].dt.minute
 
-    # Format the date and time
+
     traffic_data["datetime_str"] = traffic_data["Date"].dt.strftime("%Y-%m-%d %H:%M")
 
-    # Now convert this string into a datetime object
+
     traffic_data["datetime"] = pd.to_datetime(
         traffic_data["datetime_str"], format="%Y-%m-%d %H:%M"
     )
 
     traffic_data["day_of_week"] = traffic_data["datetime"].dt.day_name()
 
-    # Ensure 'Average_volume' is the correct column name
+
     pivot_table = traffic_data.pivot_table(
-        values="Average_volume",  # Replace with the actual column name
+        values="Average_volume",
         index="day_of_week",
         columns=traffic_data["datetime"].dt.hour,
         aggfunc="mean",
@@ -330,10 +311,5 @@ def analyze_traffic_data(traffic_data):
     buf = BytesIO()
     plt.savefig(buf, format="png")
     heatmap = base64.b64encode(buf.getvalue()).decode("ascii")
-
-    # Bar chart for traffic volume by borough
-    # Bar chart for traffic volume by borough
-
-    # Line chart for traffic volume trends over time
 
     return heatmap

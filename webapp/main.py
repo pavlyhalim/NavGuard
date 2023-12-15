@@ -59,10 +59,10 @@ def cluster_page():
 def construction_heatmap():
     return render_template('construction_heatmap.html')
 
-# Home route
+
 @app.route("/")
 def home():
-    # Filter data for a specific year (you can change the year as needed)
+
     year = 2022
     filtered_traffic_data = filter_traffic_data(traffic_data, year)
     filtered_crash_data = filter_crash_data(collision_data, year)
